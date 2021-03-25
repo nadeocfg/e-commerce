@@ -1,12 +1,12 @@
-# MERN Boilerplate
+# E-Commerce app
 
 ## Description
 
-Simple app with React, Redux, Typescript, React-router and Express for API.
+E-commerce app with MERN stack.
 
 ```sh
 ./frontend - React app
-./backend - Express.js server
+./backend - Node.js app
 ```
 
 ## Scripts
@@ -28,10 +28,3 @@ npm run start:dev
 ```
 
 Start React app with Express server together
-
-## ToDo List
-
-✔️ Add React  
-✔️ Add Redux, React-router  
-✔️ Express  
-✔️ MongoDB connection
