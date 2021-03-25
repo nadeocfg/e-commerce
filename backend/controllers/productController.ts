@@ -1,5 +1,5 @@
 import Product from '../schemas/productSchema';
-import express from 'express';
+import express, { NextFunction } from 'express';
 
 // @desc   Fetch all products
 // @route  GET /api/products
@@ -8,15 +8,15 @@ const getProducts = async (
   request: express.Request,
   response: express.Response
 ) => {
-  try {
-    const products = await Product.find({});
+  const products = await Product.find({});
+
+  if (products) {
     response.json(products);
-  } catch (error) {
+  } else {
     response.status(404).json({
-      message: error.message,
+      message: products.message,
     });
-    console.error(`Error: ${error.message}`);
-    process.exit(1);
+    console.error(`Error: ${products.message}`);
   }
 };
 
@@ -29,20 +29,13 @@ const getProductById = async (
 ) => {
   try {
     const product = await Product.findById(request.params.id);
-
-    if (product) {
-      return response.json(product);
-    }
-
-    response.status(404).json({
-      message: `Product with id ${request.params.id} not found`,
-    });
+    response.json(product);
   } catch (error) {
-    response.status(404).json({
-      message: error.message,
+    response.status(404);
+    response.json({
+      message: `Product with id ${request.params.id} not found`,
+      stack: process.env.NODE_ENV === 'production' ? null : error.stack,
     });
-    console.error(`Error: ${error.message}`);
-    process.exit(1);
   }
 };
 

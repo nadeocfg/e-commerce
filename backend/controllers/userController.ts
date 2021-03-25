@@ -1,13 +1,16 @@
 import User from '../schemas/userSchema';
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { SHA256 } from 'crypto-js';
+import generateJwt from '../utils/generateToken';
+import { UserRequest } from '../models/UserRequestModel';
 
 // @desc   Auth user, get token
 // @route  POST /api/users/login
 // @access Public
 const authUser = async (
-  request: express.Request,
-  response: express.Response
+  request: Request,
+  response: Response,
+  next: NextFunction
 ) => {
   try {
     const { email, password } = request.body;
@@ -15,18 +18,22 @@ const authUser = async (
     const user = await User.findOne({ email });
 
     if (user && (await user.checkPassword(password))) {
-      response.json(user);
-    } else {
-      response.status(404).json({
-        message: 'User not found or incorrect email/password',
+      response.json({
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        token: generateJwt(user._id),
       });
+    } else {
+      response.status(404);
+      next(`Incorrect email or password`);
     }
   } catch (error) {
     response.status(404).json({
       message: error.message,
     });
-    console.error(`Error: ${error.message}`);
-    process.exit(1);
+    next(`Error: ${error.message}`);
   }
 };
 
@@ -34,8 +41,9 @@ const authUser = async (
 // @route  POST /api/users/signup
 // @access Public
 const signupUser = async (
-  request: express.Request,
-  response: express.Response
+  request: Request,
+  response: Response,
+  next: NextFunction
 ) => {
   try {
     const { email, password, name } = request.body;
@@ -47,24 +55,37 @@ const signupUser = async (
       isAdmin: false,
     });
 
-    console.log(user);
-
     if (user) {
       response.json({
         message: 'User created',
       });
     } else {
-      response.status(404).json({
-        message: user,
-      });
+      response.status(500);
+      next(`Cannot create user with email: ${email}`);
     }
   } catch (error) {
-    response.status(404).json({
-      message: error.message,
-    });
+    response.status(500);
+    next(`Error: ${error.message}`);
     console.error(`Error: ${error.message}`);
-    process.exit(1);
   }
 };
 
-export { authUser, signupUser };
+// @desc   Get user by token
+// @route  GET /api/users/profile
+// @access Private
+const getUserByToken = (
+  request: UserRequest,
+  response: Response,
+  next: NextFunction
+) => {
+  try {
+    response.status(200);
+    response.json(request.user);
+  } catch (response) {
+    console.error(`Error: ${response.message}`);
+    response.status(401);
+    next(`Error: ${response.message}`);
+  }
+};
+
+export { authUser, signupUser, getUserByToken };
