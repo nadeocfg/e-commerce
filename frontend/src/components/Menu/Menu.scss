@@ -1,0 +1,10 @@
+.menu {
+  display: flex;
+  justify-content: center;
+  flex: 1;
+  list-style: none;
+
+  &__item:not(:first-child) {
+    margin-left: 20px;
+  }
+}
