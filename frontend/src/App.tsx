@@ -7,10 +7,10 @@ function App() {
   return (
     <>
       <Switch>
-        <Route exact path='/'>
+        <Route exact path="/">
           <Home />
         </Route>
-        <Route path='/'>
+        <Route path="/">
           <NotFound />
         </Route>
       </Switch>

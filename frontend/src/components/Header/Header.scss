@@ -1,0 +1,17 @@
+.header {
+  display: flex;
+  align-items: center;
+  padding: 15px 30px;
+
+  &__logo {
+    & svg {
+      fill: #ccc;
+      height: 50px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      &:hover {
+        fill: #333;
+      }
+    }
+  }
+}
