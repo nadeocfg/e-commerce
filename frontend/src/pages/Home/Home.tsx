@@ -3,6 +3,7 @@ import axios from 'axios';
 import counterActions from '../../store/actions/counterActions';
 import './Home.scss';
 import { useEffect } from 'react';
+import Header from '../../components/Header';
 
 function Home({ ...props }: any) {
   const { counter, increment, decrement, incrementNumber } = props;
@@ -25,7 +26,7 @@ function Home({ ...props }: any) {
   return (
     <>
       <h1>Home page</h1>
-
+      <Header />
       <h4>{counter}</h4>
       <button onClick={() => increment()}>INC</button>
       <button onClick={() => decrement()}>DEC</button>
