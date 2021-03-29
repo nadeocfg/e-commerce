@@ -27,7 +27,9 @@ const authUser = async (
       });
     } else {
       response.status(404);
-      next(`Incorrect email or password`);
+      response.json({
+        message: `Incorrect email or password`,
+      });
     }
   } catch (error) {
     response.status(404).json({
@@ -40,11 +42,7 @@ const authUser = async (
 // @desc   Signup user
 // @route  POST /api/users/signup
 // @access Public
-const signupUser = async (
-  request: Request,
-  response: Response,
-  next: NextFunction
-) => {
+const signupUser = async (request: Request, response: Response) => {
   try {
     const { email, password, name } = request.body;
 
@@ -61,11 +59,13 @@ const signupUser = async (
       });
     } else {
       response.status(500);
-      next(`Cannot create user with email: ${email}`);
     }
   } catch (error) {
+    const { email } = request.body;
     response.status(500);
-    next(`Error: ${error.message}`);
+    response.json({
+      message: `${email} is already exist`,
+    });
     console.error(`Error: ${error.message}`);
   }
 };
@@ -73,18 +73,17 @@ const signupUser = async (
 // @desc   Get user by token
 // @route  GET /api/users/profile
 // @access Private
-const getUserByToken = (
-  request: UserRequest,
-  response: Response,
-  next: NextFunction
-) => {
+const getUserByToken = (request: UserRequest, response: Response) => {
   try {
     response.status(200);
     response.json(request.user);
   } catch (response) {
     console.error(`Error: ${response.message}`);
     response.status(401);
-    next(`Error: ${response.message}`);
+
+    response.json({
+      message: `Error: ${response.message}`,
+    });
   }
 };
 

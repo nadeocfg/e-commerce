@@ -28,7 +28,7 @@ const protect = async (
 
   if (!request.headers.authorization) {
     response.status(401);
-    next(new Error('Unauthorized'));
+    next(new Error('No token'));
   }
 
   next();
