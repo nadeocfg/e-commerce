@@ -2,7 +2,7 @@ import User from '../schemas/userSchema';
 import express, { NextFunction, Request, Response } from 'express';
 import { SHA256 } from 'crypto-js';
 import generateJwt from '../utils/generateToken';
-import { UserRequest } from '../models/UserRequestModel';
+import { UserRequest } from '../../frontend/src/models/UserRequestModel';
 
 // @desc   Auth user, get token
 // @route  POST /api/users/login

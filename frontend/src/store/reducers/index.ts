@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
-import counter from './counterReducer';
+import productsStore from './productsReducer';
+import snackbarStore from './snackbarReducer';
 
 const rootReducer = combineReducers({
-  counter,
+  snackbarStore,
+  productsStore,
 });
 
 export default rootReducer;

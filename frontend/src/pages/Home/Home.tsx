@@ -1,40 +1,62 @@
-import { connect } from 'react-redux';
-import axios from 'axios';
-import counterActions from '../../store/actions/counterActions';
 import './Home.scss';
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { getProducts } from '../../store/actions/productsActions';
+import { SET_SNACKBAR } from '../../store/storeConstants/snackbarConstants';
 
-function Home({ ...props }: any) {
-  const { counter, increment, decrement, incrementNumber } = props;
-
+function Home() {
+  const dispatch = useDispatch();
   useEffect(() => {
-    getProducts();
-  }, []);
-
-  const getProducts = () => {
-    return axios
-      .get('/api/products')
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log({ ...err });
-      });
-  };
+    dispatch(getProducts());
+  }, [dispatch]);
 
   return (
     <>
       <h1>Home page</h1>
 
-      <h4>{counter}</h4>
-      <button onClick={() => increment()}>INC</button>
-      <button onClick={() => decrement()}>DEC</button>
-      <button onClick={() => incrementNumber(5)}>INC +5</button>
+      <button
+        onClick={() =>
+          dispatch({
+            type: SET_SNACKBAR,
+            payload: {
+              message: 'test',
+              type: 'error',
+            },
+          })
+        }
+      >
+        error
+      </button>
+
+      <button
+        onClick={() =>
+          dispatch({
+            type: SET_SNACKBAR,
+            payload: {
+              message: 'test 1',
+              type: 'success',
+            },
+          })
+        }
+      >
+        success
+      </button>
+
+      <button
+        onClick={() =>
+          dispatch({
+            type: SET_SNACKBAR,
+            payload: {
+              message: 'test 1',
+              type: 'warning',
+            },
+          })
+        }
+      >
+        warning
+      </button>
     </>
   );
 }
 
-const mapStateToProps = (state: any) => ({
-  counter: state.counter.counter,
-});
-export default connect(mapStateToProps, counterActions)(Home);
+export default Home;
